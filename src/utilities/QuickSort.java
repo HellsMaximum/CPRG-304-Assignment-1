@@ -1,22 +1,22 @@
-
 package utilities;
 
 import java.util.Comparator;
+import products.Product;
 
 /**
- * Quick sort implementation that sorts in descending order
- * using the median-of-3 approach for pivot selection.
+ * Quick sort implementation for sorting Product arrays in descending order
+ * using a median-of-three pivot.
  */
 public class QuickSort {
 
     /**
      * Sorts the array into descending order using the given comparator.
      *
-     * @param <E> the element type
      * @param arr the array to sort
-     * @param comp defines the ordering of the elements
+     * @param comp defines the ordering of the products
      */
-    public static <E> void sort(E[] arr, Comparator<? super E> comp) {
+    public static void sort(Product[] arr, Comparator<Product> comp) {
+        // Stop if the array does not need sorting.
         if (arr == null || arr.length < 2) {
             return;
         }
@@ -25,42 +25,41 @@ public class QuickSort {
     }
 
     /**
-     * Recursively sorts the partitions on either side of the pivot.
+     * Recursively sorts the sections on either side of the pivot.
      *
-     * @param <E> the element type
      * @param arr the array to sort
-     * @param low the first index of the partition
-     * @param high the last index of the partition
-     * @param comp defines the ordering of the elements
+     * @param low the starting index of the section
+     * @param high the ending index of the section
+     * @param comp defines the ordering of the products
      */
-    private static <E> void quickSort(
-            E[] arr, int low, int high, Comparator<? super E> comp) {
+    private static void quickSort(
+            Product[] arr, int low, int high, Comparator<Product> comp) {
 
-        if (low >= high) {
-            return;
+        if (low < high) {
+            // Partition the array and find the pivot's final position.
+            int pivotIndex = partition(arr, low, high, comp);
+
+            // Sort the sections before and after the pivot.
+            quickSort(arr, low, pivotIndex - 1, comp);
+            quickSort(arr, pivotIndex + 1, high, comp);
         }
-
-        int pivotIndex = partition(arr, low, high, comp);
-
-        quickSort(arr, low, pivotIndex - 1, comp);
-        quickSort(arr, pivotIndex + 1, high, comp);
     }
 
     /**
-     * Selects the median of the first, middle, and last elements.
+     * Partitions the array around a median-of-three pivot.
      *
-     * @param <E> the element type
-     * @param arr the array containing the pivot candidates
-     * @param low the first index
-     * @param high the last index
-     * @param comp defines the ordering of the elements
-     * @return the selected median pivot
+     * @param arr the array to partition
+     * @param low the starting index of the section
+     * @param high the ending index of the section
+     * @param comp defines the ordering of the products
+     * @return the final index of the pivot
      */
-    private static <E> E medianOfThree(
-            E[] arr, int low, int high, Comparator<? super E> comp) {
+    private static int partition(
+            Product[] arr, int low, int high, Comparator<Product> comp) {
 
         int mid = low + (high - low) / 2;
 
+        // Order the first, middle, and last products.
         if (comp.compare(arr[low], arr[mid]) < 0) {
             swap(arr, low, mid);
         }
@@ -73,29 +72,13 @@ public class QuickSort {
             swap(arr, mid, high);
         }
 
-        E pivot = arr[mid];
+        // Move the median-of-three pivot to the end of the section.
         swap(arr, mid, high);
+        Product pivot = arr[high];
 
-        return pivot;
-    }
-
-    /**
-     * Partitions the array so elements greater than or equal to
-     * the pivot appear before it.
-     *
-     * @param <E> the element type
-     * @param arr the array to partition
-     * @param low the first index of the partition
-     * @param high the last index of the partition
-     * @param comp defines the ordering of the elements
-     * @return the final index of the pivot
-     */
-    private static <E> int partition(
-            E[] arr, int low, int high, Comparator<? super E> comp) {
-
-        E pivot = medianOfThree(arr, low, high, comp);
         int i = low;
 
+        // Place products greater than or equal to the pivot first.
         for (int j = low; j < high; j++) {
             if (comp.compare(arr[j], pivot) >= 0) {
                 swap(arr, i, j);
@@ -103,20 +86,21 @@ public class QuickSort {
             }
         }
 
+        // Place the pivot in its final position.
         swap(arr, i, high);
+
         return i;
     }
 
     /**
-     * Swaps two elements in the array.
+     * Exchanges two products in the array.
      *
-     * @param <E> the element type
-     * @param arr the array containing the elements
-     * @param i the index of the first element
-     * @param j the index of the second element
+     * @param arr the array containing the products
+     * @param i the index of the first product
+     * @param j the index of the second product
      */
-    private static <E> void swap(E[] arr, int i, int j) {
-        E temp = arr[i];
+    private static void swap(Product[] arr, int i, int j) {
+        Product temp = arr[i];
         arr[i] = arr[j];
         arr[j] = temp;
     }

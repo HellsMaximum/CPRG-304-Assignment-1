@@ -95,7 +95,7 @@ public class AppDriver {
             }
         }
 
-        // Ensure that all required arguments were supplied.
+        // Check that all required arguments were provided.
         if (fileName == null || compareType == null || sortType == null) {
             System.out.println("Error: Missing required arguments.");
             printUsage();
@@ -185,7 +185,7 @@ public class AppDriver {
                 products[i] = product;
             }
 
-            // Reject unexpected additional product records.
+            // Reject additional nonblank product records.
             String extraLine;
 
             while ((extraLine = reader.readLine()) != null) {
@@ -239,7 +239,7 @@ public class AppDriver {
                 QuickSort.sort(products, comp);
                 break;
             case "z":
-                GnomeSort.sort(products, comp);
+                HeapSort.sort(products, comp);
                 break;
             default:
                 System.out.println("Error: Invalid sorting type.");
@@ -247,7 +247,7 @@ public class AppDriver {
         }
 
         long endTime = System.nanoTime();
-        long elapsedMs = (endTime - startTime) / 1_000_000;
+        double elapsedMs = (endTime - startTime) / 1_000_000.0;
 
         // Display the sorted products and runtime.
         printProducts(products, compareType);
@@ -258,12 +258,12 @@ public class AppDriver {
     }
 
     /**
-     * Creates the correct product subclass.
+     * Creates a product object based on the supplied product type.
      *
-     * @param type the product type
-     * @param originalPrice the original price
-     * @param updatedPrice the updated price
-     * @return the created product, or null for an unknown type
+     * @param type the product category
+     * @param originalPrice the original product price
+     * @param updatedPrice the updated product price
+     * @return the corresponding product object, or null if the type is unknown
      */
     private static Product createProduct(
             String type, double originalPrice, double updatedPrice) {
@@ -289,20 +289,19 @@ public class AppDriver {
     }
 
     /**
-     * Displays the sorted products according to the assignment's rules.
+     * Displays products according to the assignment's output requirements.
      *
-     * @param products the sorted products
+     * @param products the sorted product array
      * @param compareType the selected comparison type
      */
-    private static void printProducts(
-            Product[] products, String compareType) {
+    private static void printProducts(Product[] products, String compareType) {
 
         if (products.length == 0) {
             System.out.println("No products to display.");
             return;
         }
 
-        // Display every product when there are ten or fewer.
+        // Display every product when there are at most ten.
         if (products.length <= 10) {
             for (int i = 0; i < products.length; i++) {
                 printProduct(
@@ -312,26 +311,28 @@ public class AppDriver {
             return;
         }
 
-        // Use every hundredth or thousandth element as required.
+        // Use the required interval for larger product arrays.
         int interval = products.length <= 1000 ? 100 : 1000;
 
         printProduct("First element is:", products[0], compareType);
 
+        // Display products at the required intervals.
         for (int i = interval - 1; i < products.length - 1; i += interval) {
             printProduct(
                     (i + 1) + ordinalSuffix(i + 1) + " element:",
                     products[i], compareType);
         }
 
+        // Always display the final product.
         printProduct(
                 "Last element is:",
                 products[products.length - 1], compareType);
     }
 
     /**
-     * Displays one product with its position and selected value.
+     * Displays one product and its selected comparison value.
      *
-     * @param position the label for the product's position
+     * @param position the product's position label
      * @param product the product to display
      * @param compareType the selected comparison type
      */
@@ -356,19 +357,15 @@ public class AppDriver {
                 break;
         }
 
-        System.out.printf(
-                "%-24s %-25s %s%.2f%n",
-                position,
-                product.getClass().getName(),
-                valueLabel,
-                value);
+        System.out.printf("%-24s %-25s %s%.2f%n",
+                position, product.getClass().getName(), valueLabel, value);
     }
 
     /**
      * Returns the ordinal suffix for a number.
      *
-     * @param number the number
-     * @return the ordinal suffix
+     * @param number the number to format
+     * @return the appropriate ordinal suffix
      */
     private static String ordinalSuffix(int number) {
 
@@ -391,10 +388,10 @@ public class AppDriver {
     }
 
     /**
-     * Returns the display name of the selected sorting algorithm.
+     * Returns the name of the selected sorting algorithm.
      *
-     * @param sortType the selected sorting type
-     * @return the sorting algorithm name
+     * @param sortType the sorting algorithm identifier
+     * @return the sorting algorithm's name
      */
     private static String getSortName(String sortType) {
 
@@ -410,21 +407,19 @@ public class AppDriver {
             case "q":
                 return "Quick Sort";
             case "z":
-                return "Gnome Sort";
+                return "Heap Sort";
             default:
                 return "Unknown Sort";
         }
     }
 
     /**
-     * Displays the command-line argument format.
+     * Displays the command-line usage instructions.
      */
     private static void printUsage() {
 
         System.out.println(
-                "Usage: java -jar Sort.jar "
-                + "-f<filename> -t<o|u|d> -s<b|s|i|m|q|z>");
-
+                "Usage: java -jar Sort.jar -f<filename> -t<o|u|d> -s<b|s|i|m|q|z>");
         System.out.println("  -f<filename>  Input file");
         System.out.println("  -to           Sort by original price");
         System.out.println("  -tu           Sort by updated price");
@@ -434,6 +429,6 @@ public class AppDriver {
         System.out.println("  -si           Insertion Sort");
         System.out.println("  -sm           Merge Sort");
         System.out.println("  -sq           Quick Sort");
-        System.out.println("  -sz           Gnome Sort");
+        System.out.println("  -sz           Heap Sort");
     }
 }
