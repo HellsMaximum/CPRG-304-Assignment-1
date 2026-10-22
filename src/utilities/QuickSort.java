@@ -4,12 +4,19 @@ package utilities;
 import java.util.Comparator;
 
 /**
- * Quick Sort using median-of-3 pivot selection.
- * Sorts elements in descending order using the supplied comparator.
+ * Quick sort implementation that sorts in descending order
+ * using the median-of-3 approach for pivot selection.
  */
 public class QuickSort {
 
-    public static <T> void sort(T[] arr, Comparator<? super T> comp) {
+    /**
+     * Sorts the array into descending order using the given comparator.
+     *
+     * @param <E> the element type
+     * @param arr the array to sort
+     * @param comp defines the ordering of the elements
+     */
+    public static <E> void sort(E[] arr, Comparator<? super E> comp) {
         if (arr == null || arr.length < 2) {
             return;
         }
@@ -17,8 +24,17 @@ public class QuickSort {
         quickSort(arr, 0, arr.length - 1, comp);
     }
 
-    private static <T> void quickSort(
-            T[] arr, int low, int high, Comparator<? super T> comp) {
+    /**
+     * Recursively sorts the partitions on either side of the pivot.
+     *
+     * @param <E> the element type
+     * @param arr the array to sort
+     * @param low the first index of the partition
+     * @param high the last index of the partition
+     * @param comp defines the ordering of the elements
+     */
+    private static <E> void quickSort(
+            E[] arr, int low, int high, Comparator<? super E> comp) {
 
         if (low >= high) {
             return;
@@ -30,9 +46,18 @@ public class QuickSort {
         quickSort(arr, pivotIndex + 1, high, comp);
     }
 
-    // Select the median of the first, middle, and last elements.
-    private static <T> T medianOfThree(
-            T[] arr, int low, int high, Comparator<? super T> comp) {
+    /**
+     * Selects the median of the first, middle, and last elements.
+     *
+     * @param <E> the element type
+     * @param arr the array containing the pivot candidates
+     * @param low the first index
+     * @param high the last index
+     * @param comp defines the ordering of the elements
+     * @return the selected median pivot
+     */
+    private static <E> E medianOfThree(
+            E[] arr, int low, int high, Comparator<? super E> comp) {
 
         int mid = low + (high - low) / 2;
 
@@ -48,18 +73,27 @@ public class QuickSort {
             swap(arr, mid, high);
         }
 
-        // The middle candidate is now the median.
-        T pivot = arr[mid];
+        E pivot = arr[mid];
         swap(arr, mid, high);
 
         return pivot;
     }
 
-    // Partition the array so larger elements come first.
-    private static <T> int partition(
-            T[] arr, int low, int high, Comparator<? super T> comp) {
+    /**
+     * Partitions the array so elements greater than or equal to
+     * the pivot appear before it.
+     *
+     * @param <E> the element type
+     * @param arr the array to partition
+     * @param low the first index of the partition
+     * @param high the last index of the partition
+     * @param comp defines the ordering of the elements
+     * @return the final index of the pivot
+     */
+    private static <E> int partition(
+            E[] arr, int low, int high, Comparator<? super E> comp) {
 
-        T pivot = medianOfThree(arr, low, high, comp);
+        E pivot = medianOfThree(arr, low, high, comp);
         int i = low;
 
         for (int j = low; j < high; j++) {
@@ -73,8 +107,16 @@ public class QuickSort {
         return i;
     }
 
-    private static <T> void swap(T[] arr, int i, int j) {
-        T temp = arr[i];
+    /**
+     * Swaps two elements in the array.
+     *
+     * @param <E> the element type
+     * @param arr the array containing the elements
+     * @param i the index of the first element
+     * @param j the index of the second element
+     */
+    private static <E> void swap(E[] arr, int i, int j) {
+        E temp = arr[i];
         arr[i] = arr[j];
         arr[j] = temp;
     }
