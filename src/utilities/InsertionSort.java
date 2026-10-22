@@ -2,14 +2,17 @@ package utilities;
 
 import java.util.Comparator;
 
-// insertion sort - sorts in descending order (largest to smallest)
+/**
+ * Insertion sort implementation that sorts in descending order.
+ */
 public class InsertionSort {
 
-	// sorts the array into descending order using the given comparator
-	// works like sorting cards in your hand: take one item at a time
-	// and slide it left until it's sitting in the right spot
-	// arr is the array to sort, comp decides how two items get compared
-	// (original price, updated price, or calculated difference)
+	/**
+	 * Sorts the array into descending order using the given comparator.
+	 * @param <E> the element type
+	 * @param arr the array to sort
+	 * @param comp defines the ordering of the elements
+	 */
 	public static <E> void sort( E[] arr, Comparator<? super E> comp )
 	{
 		// start at index 1, the first item on its own counts as sorted
@@ -38,8 +41,11 @@ public class InsertionSort {
 		}
 	}
 
-	// sorts the array into descending order using natural (compareTo) ordering
-	// used for the calculated difference (-td), just passes compareTo in as the comparator
+	/**
+	 * Sorts the array into descending order using natural (compareTo) ordering.
+	 * @param <E> the element type
+	 * @param arr the array to sort
+	 */
 	public static <E extends Comparable<? super E>> void sort( E[] arr )
 	{
 		sort( arr, ( a, b ) -> a.compareTo( b ) );
